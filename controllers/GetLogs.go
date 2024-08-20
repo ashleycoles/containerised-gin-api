@@ -4,6 +4,7 @@ import (
 	"ashleycoles/logbook-api/models"
 	"ashleycoles/logbook-api/responses"
 	"ashleycoles/logbook-api/services"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -11,7 +12,7 @@ import (
 func GetLogs(c *gin.Context) {
 	db, err := services.DatabaseService()
 	if err != nil {
-		res := responses.ErrorResponse{Message: "Internal Server Error: " + err.Error()}
+		res := responses.ErrorResponse{Message: fmt.Sprintf("Internal Server Error: %v", err.Error())}
 		c.IndentedJSON(http.StatusInternalServerError, res)
 		return
 	}
@@ -21,7 +22,7 @@ func GetLogs(c *gin.Context) {
 	logs, logsErr := model.All()
 
 	if logsErr != nil {
-		res := responses.ErrorResponse{Message: "Internal Server Error: " + logsErr.Error()}
+		res := responses.ErrorResponse{Message: fmt.Sprintf("Internal Server Error: %v", logsErr.Error())}
 		c.IndentedJSON(http.StatusInternalServerError, res)
 	}
 
