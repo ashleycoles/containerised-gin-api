@@ -1,0 +1,10 @@
+root = "."
+tmp_dir = "tmp"
+build_dir = "build"
+build = "go build -o ./tmp/main ."
+bin = "tmp/main"
+watch_dir = ["."]
+exclude_dir = ["tmp", "vendor"]
+
+[log]
+level = "debug"
