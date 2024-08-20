@@ -21,10 +21,18 @@ func PostLog(c *gin.Context) {
 	model := models.LogModel{DB: db}
 	var newLog models.Log
 
-	if err := c.BindJSON(&newLog); err != nil {
-		log.Printf("PostLog: %v", err)
-		res := responses.ErrorResponse{Message: "Internal Server Error"}
-		c.IndentedJSON(http.StatusInternalServerError, res)
+	if err := c.ShouldBindJSON(&newLog); err != nil {
+		res := responses.ErrorResponse{Message: "Invalid request payload"}
+		c.IndentedJSON(http.StatusUnprocessableEntity, res)
+		return
+	}
+
+	if err := newLog.Validate(); err != nil {
+		res := responses.ValidationResponse{
+			Message: "Validation failed",
+			Errors:  err,
+		}
+		c.IndentedJSON(http.StatusUnprocessableEntity, res)
 		return
 	}
 
