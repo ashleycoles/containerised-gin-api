@@ -16,4 +16,5 @@ stop:
 
 .PHONY: rebuild
 rebuild:
+	rm -rf db/
 	$(DOCKER_COMPOSE) up --build --force-recreate
