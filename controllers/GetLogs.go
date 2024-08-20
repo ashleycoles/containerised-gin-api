@@ -4,15 +4,16 @@ import (
 	"ashleycoles/logbook-api/models"
 	"ashleycoles/logbook-api/responses"
 	"ashleycoles/logbook-api/services"
-	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
 func GetLogs(c *gin.Context) {
 	db, err := services.DatabaseService()
 	if err != nil {
-		res := responses.ErrorResponse{Message: fmt.Sprintf("Internal Server Error: %v", err.Error())}
+		log.Printf("GetLogs: %v", err)
+		res := responses.ErrorResponse{Message: "Internal Server Error"}
 		c.IndentedJSON(http.StatusInternalServerError, res)
 		return
 	}
@@ -22,8 +23,10 @@ func GetLogs(c *gin.Context) {
 	logs, logsErr := model.All()
 
 	if logsErr != nil {
-		res := responses.ErrorResponse{Message: fmt.Sprintf("Internal Server Error: %v", logsErr.Error())}
+		log.Printf("GetLogs: %v", logsErr)
+		res := responses.ErrorResponse{Message: "Internal Server Error"}
 		c.IndentedJSON(http.StatusInternalServerError, res)
+		return
 	}
 
 	res := responses.LogResponse{Data: logs, Message: "Logs retrieved"}
